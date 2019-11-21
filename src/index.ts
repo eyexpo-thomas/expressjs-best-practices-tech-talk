@@ -12,4 +12,4 @@ app.use(helmet()); // Mistake! Helmet needs to run before the router
 router.get('/test-router', middleware1, middleware2);
 app.get('/test-app', middleware1, middleware2);
 
-app.listen(8080, () => console.log('http://localhost:8080'));
+app.listen(3210, () => console.log('http://localhost:3210'));
