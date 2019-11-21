@@ -1,4 +1,4 @@
-#### Security Example
+#### Middleware order
 
 This example shows the consequences of calling middleware out-of-order.
 
