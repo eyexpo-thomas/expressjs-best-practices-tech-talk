@@ -7,7 +7,7 @@ const app = express();
 const router = express.Router();
 
 app.use(router);
-app.use(helmet()); // Ensure you use helmet _before_ the router!
+app.use(helmet()); // Mistake! Helmet needs to run before the router
 
 router.get('/test-router', middleware1, middleware2);
 app.get('/test-app', middleware1, middleware2);
