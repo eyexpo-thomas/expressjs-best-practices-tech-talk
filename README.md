@@ -1,28 +1,7 @@
-#### Helmet
+# ExpressJS Best Practices tech talk
 
-Use `helmet` to set security headers.
+## [Presentation](https://docs.google.com/presentation/d/144IlhI5ro4kSRALJdXZOrDeA-W0N8_Qd0MfefZdYfJ0/edit?usp=sharing)
 
-```sh
-npm i helmet && npm i -D @types/helmet
-```
-
-Headers without helmet:
-
-```json
-{
-  "X-Powered-By": "Express"
-}
-```
-
-Headers with helmet:
-
-```json
-{
-  "x-dns-prefetch-control": "off",
-  "x-frame-options": "SAMEORIGIN",
-  "strict-transport-security": "max-age=15552000; includeSubDomains",
-  "x-download-options": "noopen",
-  "x-content-type-options": "nosniff",
-  "x-xss-protection": "1; mode=block"
-}
-```
+## Security
+- [Helmet](https://github.com/eyexpo-thomas/expressjs-best-practices-tech-talk/tree/security/helmet)
+- [Middleware Order](https://github.com/eyexpo-thomas/expressjs-best-practices-tech-talk/tree/security/middleware-order)
