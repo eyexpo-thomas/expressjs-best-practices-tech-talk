@@ -1,23 +1,28 @@
-#### Security Example
+#### Helmet
 
-This example shows the consequences of calling middleware out-of-order.
+Use `helmet` to set security headers.
 
-`helmet` is a security middleware. One of it's functions is to hide the `X-powered-by: 'Express'` default header. This means that when someone discoveres a zero-day exploit for Express/NodeJS, they won't discover that our server is vulnerable by simply looking at the headers.
-
-When helmet included _after_ the router is used, it runs after our middleware, and never works!
-
-To fix this, we need to use `helmet` first.
-
-```javascript
-// good
-const router = express.Router();
-app.use(helmet());
-app.use(router);
+```sh
+npm i helmet && npm i -D @types/helmet
 ```
 
-```javascript
-// bad
-const router = express.Router();
-app.use(router);
-app.use(helmet());
+Headers without helmet:
+
+```json
+{
+  "X-Powered-By": "Express"
+}
+```
+
+Headers with helmet:
+
+```json
+{
+  "x-dns-prefetch-control": "off",
+  "x-frame-options": "SAMEORIGIN",
+  "strict-transport-security": "max-age=15552000; includeSubDomains",
+  "x-download-options": "noopen",
+  "x-content-type-options": "nosniff",
+  "x-xss-protection": "1; mode=block"
+}
 ```
