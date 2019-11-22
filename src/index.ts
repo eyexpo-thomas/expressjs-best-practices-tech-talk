@@ -1,10 +1,11 @@
-import express from 'express';
-import * as bodyParser from 'body-parser';
-import { saveRequestToTape, loginWithEmailAndPassword } from './middleware';
+import * as sortingService from './sortingService';
 
-const app = express();
-app.use(bodyParser.json()).use(bodyParser.urlencoded({ extended: true }));
+const main = async () => {
+  const words = ['foo', 'bar', 'baz', 'quaz'];
 
-app.all('/', saveRequestToTape, loginWithEmailAndPassword);
+  const sorted = words.sort(sortingService.sortWord);
 
-app.listen(3210, () => console.log('http://localhost:3210'));
+  console.log(sorted);
+};
+
+main();
