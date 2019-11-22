@@ -1,11 +1,31 @@
-import * as sortingService from './sortingService';
+import express, { Request, NextFunction, Response } from 'express';
+import * as bodyParser from 'body-parser';
 
-const main = async () => {
-  const words = ['foo', 'bar', 'baz', 'quaz'];
+const app = express();
 
-  const sorted = words.sort(sortingService.sortWord);
+app.use(bodyParser.json()).use(bodyParser.urlencoded({ extended: true }));
 
-  console.log(sorted);
+type User = { name: string; id: number };
+
+const a = async (req: Request, res: Response, next: NextFunction) => {
+  // validate user
+  if (
+    typeof req.body?.user?.id !== 'number' ||
+    typeof req.body?.user?.name !== 'string'
+  ) {
+    next(Error('INVALID_USER'));
+  }
+  res.locals.user = req.body?.user as User;
+  next();
 };
 
-main();
+const b = async (_req: Request, res: Response) => {
+  if (res.locals.user) {
+    return res.send(`User ${res.locals.user.name} exists`);
+  }
+  return res.send(`User does not exist`);
+};
+
+app.post('/', a, b);
+
+app.listen(3210, () => console.log('http://localhost:3210'));

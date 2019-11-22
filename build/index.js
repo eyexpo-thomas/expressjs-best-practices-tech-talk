@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -16,10 +19,25 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const sortingService = __importStar(require("./sortingService"));
-const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    const words = ['foo', 'bar', 'baz', 'quaz'];
-    const sorted = words.sort(sortingService.sortWord);
-    console.log(sorted);
+const express_1 = __importDefault(require("express"));
+const bodyParser = __importStar(require("body-parser"));
+const app = express_1.default();
+app.use(bodyParser.json()).use(bodyParser.urlencoded({ extended: true }));
+const a = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b, _c, _d, _e;
+    // validate user
+    if (typeof ((_b = (_a = req.body) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.id) !== 'number' ||
+        typeof ((_d = (_c = req.body) === null || _c === void 0 ? void 0 : _c.user) === null || _d === void 0 ? void 0 : _d.name) !== 'string') {
+        next(Error('INVALID_USER'));
+    }
+    res.locals.user = (_e = req.body) === null || _e === void 0 ? void 0 : _e.user;
+    next();
 });
-main();
+const b = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (res.locals.user) {
+        return res.send(`User ${res.locals.user.name} exists`);
+    }
+    return res.send(`User does not exist`);
+});
+app.post('/', a, b);
+app.listen(3210, () => console.log('http://localhost:3210'));
