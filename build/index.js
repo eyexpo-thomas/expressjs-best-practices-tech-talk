@@ -1,4 +1,13 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -19,25 +28,46 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint lines-between-class-members: 0 */
+/* eslint no-useless-constructor: 0 */
 const express_1 = __importDefault(require("express"));
 const bodyParser = __importStar(require("body-parser"));
+require("reflect-metadata");
+const class_transformer_1 = require("class-transformer");
 const app = express_1.default();
 app.use(bodyParser.json()).use(bodyParser.urlencoded({ extended: true }));
-const a = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d, _e;
-    // validate user
-    if (typeof ((_b = (_a = req.body) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.id) !== 'number' ||
-        typeof ((_d = (_c = req.body) === null || _c === void 0 ? void 0 : _c.user) === null || _d === void 0 ? void 0 : _d.name) !== 'string') {
-        next(Error('INVALID_USER'));
+class User {
+    constructor() {
+        this.id = 0;
     }
-    res.locals.user = (_e = req.body) === null || _e === void 0 ? void 0 : _e.user;
+}
+__decorate([
+    class_transformer_1.Expose(),
+    __metadata("design:type", Object)
+], User.prototype, "id", void 0);
+__decorate([
+    class_transformer_1.Expose(),
+    __metadata("design:type", String)
+], User.prototype, "name", void 0);
+const a = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body.user);
+    // validate user with class-transformer
+    try {
+        res.locals.user = class_transformer_1.plainToClass(User, req.body.user, {
+            excludeExtraneousValues: true
+        });
+    }
+    catch (e) {
+        next(e);
+    }
+    console.log(res.locals.user);
     next();
 });
 const b = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (res.locals.user) {
         return res.send(`User ${res.locals.user.name} exists`);
     }
-    return res.send(`User does not exist`);
+    return res.send('User does not exist');
 });
 app.post('/', a, b);
 app.listen(3210, () => console.log('http://localhost:3210'));
